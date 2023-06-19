@@ -10,6 +10,6 @@ const booksSchema = new Schema({
   image: { type: String, required: true },
 });
 
-const books = mongoose.model('books', booksSchema);
+const Books = mongoose.model('books', booksSchema);
 
 module.exports = Books;
