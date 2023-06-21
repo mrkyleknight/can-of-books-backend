@@ -40,6 +40,19 @@ async function createBook(request, response, next) {
   }
 }
 
+app.put('/books/:id', updateBook);
+
+async function updateBook(request, response, next) {
+  try {
+    const bookId = request.params.id;
+    const { title, author, genre } = request.body;
+    const updatedBook = await Books.findByIdAndUpdate(bookId, { title, author, genre }, { new: true });
+    response.status(200).json(updatedBook);
+  } catch (error) {
+    next(error);
+  }
+}
+
 app.delete('/books/:id', deleteBook);
 
 async function deleteBook(request, response, next) {
@@ -74,4 +87,4 @@ async function clear() {
   }
 }
 
-clear();
+
