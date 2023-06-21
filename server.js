@@ -10,7 +10,16 @@ const app = express();
 app.use(cors());
 app.use(express.json()); 
 
+
 const PORT = process.env.PORT || 3002;
+
+mongoose.connect(process.env.DB_URL);
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+  console.log('Mongoose is connected');
+});
 
 app.get('/test', (request, response) => {
   response.send('test request received');
@@ -31,8 +40,8 @@ app.post('/books', createBook);
 
 async function createBook(request, response, next) {
   try {
-    const { title, author, genre } = request.body;
-    const newBook = new Books({ title, author, genre });
+    const { title, description, status } = request.body;
+    const newBook = new Books({ title, description, status });
     const savedBook = await newBook.save();
     response.status(201).json(savedBook);
   } catch (error) {
@@ -65,13 +74,7 @@ async function deleteBook(request, response, next) {
   }
 }
 
-mongoose.connect(process.env.DB_URL);
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-  console.log('Mongoose is connected');
-});
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
 
@@ -87,4 +90,4 @@ async function clear() {
   }
 }
 
-
+// clear();
